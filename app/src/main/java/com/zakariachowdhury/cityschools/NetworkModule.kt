@@ -1,12 +1,19 @@
 package com.zakariachowdhury.cityschools
 
 import com.google.gson.GsonBuilder
+import dagger.Module
+import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
-object RetrofitClient {
-    val citySchoolsApi: CitySchoolsApi by lazy {
-        Retrofit.Builder()
+@Module
+class NetworkModule {
+
+    @Singleton
+    @Provides
+    fun provideCitySchoolsApi(): CitySchoolsApi {
+        return Retrofit.Builder()
             .baseUrl("https://data.cityofnewyork.us")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build().create(CitySchoolsApi::class.java)
