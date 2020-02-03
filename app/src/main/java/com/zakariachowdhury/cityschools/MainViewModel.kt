@@ -8,8 +8,19 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val schoolRepository: SchoolRepository
 ) : ViewModel() {
-    val schools = liveData(Dispatchers.IO) {
+    val citySchoolsHashMap = liveData(Dispatchers.IO) {
         val fetchedSchools = schoolRepository.getSchools()
-        emit(fetchedSchools)
+
+        var hashMap: HashMap<String, ArrayList<String>> = HashMap()
+
+        for (school in fetchedSchools) {
+            if (hashMap.get(school.city) == null) {
+                hashMap.put(school.city, ArrayList())
+            }
+            var citySchools = hashMap.get(school.city)
+            citySchools?.add(school.school_name)
+        }
+
+        emit(hashMap)
     }
 }
